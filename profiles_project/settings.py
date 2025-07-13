@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from os import getenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-bd%hcsp1=$=or#j7yz5b_a7+3k%rds!u#27&sk52@k3-$vj5^u'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = getenv('IS_DEVELOPMENT', True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [getenv('SERVER_IP'), 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -77,8 +78,12 @@ WSGI_APPLICATION = 'profiles_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'profiles_db',
+        'USER': 'profiles_dbuser',
+        'PASSWORD': getenv('DBUSER_PASS'),
+        'HOST': 'localhost',
+        'PORT': ''
     }
 }
 
@@ -118,6 +123,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATIC_ROOT = BASE_DIR / 'static'
 
 AUTH_USER_MODEL = 'profiles_app.UserProfile'
 
